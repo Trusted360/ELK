@@ -1,0 +1,128 @@
+{
+  "name": "Simplicity IT Brand Colors",
+  "description": "Official color palette for Simplicity IT dashboards and visualizations",
+  "version": "1.0.0",
+  "colors": {
+    "primary": {
+      "name": "Professional Blue",
+      "hex": "#1E88E5",
+      "rgb": "rgb(30, 136, 229)",
+      "usage": "Primary buttons, headers, main branding elements"
+    },
+    "secondary": {
+      "name": "Light Blue",
+      "hex": "#42A5F5",
+      "rgb": "rgb(66, 165, 245)",
+      "usage": "Secondary elements, hover states, gradients"
+    },
+    "accent": {
+      "name": "Teal Accent",
+      "hex": "#26C6DA",
+      "rgb": "rgb(38, 198, 218)",
+      "usage": "Call-to-action, highlights, special emphasis"
+    },
+    "success": {
+      "name": "Success Green",
+      "hex": "#66BB6A",
+      "rgb": "rgb(102, 187, 106)",
+      "usage": "Success states, healthy metrics, positive indicators"
+    },
+    "warning": {
+      "name": "Warning Orange",
+      "hex": "#FFA726",
+      "rgb": "rgb(255, 167, 38)",
+      "usage": "Warning states, medium severity alerts"
+    },
+    "danger": {
+      "name": "Danger Red",
+      "hex": "#EF5350",
+      "rgb": "rgb(239, 83, 80)",
+      "usage": "Error states, critical alerts, high severity"
+    },
+    "dark": {
+      "name": "Dark Text",
+      "hex": "#263238",
+      "rgb": "rgb(38, 50, 56)",
+      "usage": "Primary text, headings, dark UI elements"
+    },
+    "light": {
+      "name": "Light Background",
+      "hex": "#ECEFF1",
+      "rgb": "rgb(236, 239, 241)",
+      "usage": "Backgrounds, panels, cards"
+    }
+  },
+  "gradients": {
+    "primary": {
+      "name": "Primary Gradient",
+      "css": "linear-gradient(135deg, #1E88E5 0%, #42A5F5 100%)",
+      "usage": "Headers, hero sections"
+    },
+    "success": {
+      "name": "Success Gradient",
+      "css": "linear-gradient(135deg, #66BB6A 0%, #81C784 100%)",
+      "usage": "Success panels, positive metrics"
+    },
+    "alert": {
+      "name": "Alert Gradient",
+      "css": "linear-gradient(135deg, #FFA726 0%, #EF5350 100%)",
+      "usage": "Warning/danger panels, critical alerts"
+    },
+    "neutral": {
+      "name": "Neutral Gradient",
+      "css": "linear-gradient(135deg, #ECEFF1 0%, #CFD8DC 100%)",
+      "usage": "Footers, neutral sections"
+    }
+  },
+  "semanticColors": {
+    "info": "#42A5F5",
+    "success": "#66BB6A",
+    "warning": "#FFA726",
+    "error": "#EF5350",
+    "critical": "#D32F2F",
+    "medium": "#FFA726",
+    "low": "#66BB6A",
+    "high": "#EF5350"
+  },
+  "kibanaVisualizationPalette": [
+    "#1E88E5",
+    "#66BB6A",
+    "#FFA726",
+    "#EF5350",
+    "#26C6DA",
+    "#42A5F5",
+    "#81C784",
+    "#FFB74D"
+  ],
+  "chartColors": {
+    "categorical": [
+      "#1E88E5",
+      "#66BB6A",
+      "#FFA726",
+      "#26C6DA",
+      "#EF5350",
+      "#7E57C2",
+      "#42A5F5",
+      "#81C784"
+    ],
+    "sequential": [
+      "#E3F2FD",
+      "#BBDEFB",
+      "#90CAF9",
+      "#64B5F6",
+      "#42A5F5",
+      "#2196F3",
+      "#1E88E5",
+      "#1976D2"
+    ],
+    "diverging": [
+      "#EF5350",
+      "#FFA726",
+      "#FFEB3B",
+      "#ECEFF1",
+      "#81C784",
+      "#66BB6A",
+      "#4CAF50"
+    ]
+  }
+}

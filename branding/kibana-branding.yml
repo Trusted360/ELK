@@ -1,0 +1,25 @@
+# Simplicity IT - Kibana Custom Branding Configuration
+# Add this to your kibana.yml file to apply Simplicity IT branding
+
+# Custom Branding (Requires Platinum/Enterprise/Trial License)
+xpack.customBranding:
+  logo:
+    defaultUrl: 'https://simplicity-it.com/assets/img/logo.png'
+  pageTitle: 'Simplicity IT - Security Operations'
+  faviconPNG: 'https://simplicity-it.com/favicon.png'
+  faviconSVG: 'https://simplicity-it.com/favicon.svg'
+
+# Custom Response Headers
+server.customResponseHeaders:
+  X-Powered-By: 'Simplicity IT'
+  X-Content-Type-Options: 'nosniff'
+  X-Frame-Options: 'DENY'
+
+# UI Settings Overrides
+uiSettings.overrides:
+  "theme:darkMode": false
+  "defaultRoute": "/app/dashboards"
+  "dateFormat:tz": "America/New_York"
+
+# Optional: Custom login message (if using security)
+# xpack.security.loginHelp: "Contact Simplicity IT at (856) 236-2301 for access"

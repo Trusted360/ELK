@@ -1,11 +1,11 @@
 #!/bin/bash
 #
-# Quick Deploy ELK Stack - Uses Official docker-elk Repository
-# This script clones the official repo and deploys it with minimal setup
+# Simplicity IT - ELK Stack Quick Deploy with Custom Branding
+# This script clones the official docker-elk repo and applies Simplicity IT branding
 #
 # Usage: 
-#   curl -fsSL https://raw.githubusercontent.com/deviantony/docker-elk/main/scripts/quick-deploy.sh | bash
-#   Or: wget -qO- https://raw.githubusercontent.com/deviantony/docker-elk/main/scripts/quick-deploy.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/Trusted360/ELK/main/quick-deploy.sh | bash
+#   Or: wget -qO- https://raw.githubusercontent.com/Trusted360/ELK/main/quick-deploy.sh | bash
 #
 
 set -e
@@ -15,13 +15,14 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 NC='\033[0m'
 
-echo -e "${BLUE}"
+echo -e "${CYAN}"
 cat << "EOF"
 ╔═══════════════════════════════════════════════╗
-║   ELK Stack Quick Deployment (Ubuntu)         ║
-║   Uses: github.com/deviantony/docker-elk      ║
+║      Simplicity IT - ELK Stack Deploy         ║
+║   Easy to use. Easy to manage. Easy to trust. ║
 ╚═══════════════════════════════════════════════╝
 EOF
 echo -e "${NC}"
@@ -29,6 +30,8 @@ echo -e "${NC}"
 # Configuration
 ELK_DIR="$HOME/elk-stack/dev-cluster"
 REPO_URL="https://github.com/deviantony/docker-elk.git"
+BRANDING_REPO="https://github.com/Trusted360/ELK.git"
+BRANDING_DIR="/tmp/simplicity-branding"
 
 # Check if running as root
 if [ "$EUID" -eq 0 ]; then
@@ -202,18 +205,76 @@ echo ""
 echo "Service Status:"
 docker compose ps
 
+# Apply Simplicity IT Branding
+echo ""
+echo -e "${CYAN}=== Applying Simplicity IT Branding ===${NC}"
+
+# Clone branding repository
+if [ -d "$BRANDING_DIR" ]; then
+    echo "Removing old branding files..."
+    rm -rf "$BRANDING_DIR"
+fi
+
+echo "Downloading Simplicity IT branding files..."
+git clone --depth 1 "$BRANDING_REPO" "$BRANDING_DIR" 2>/dev/null || {
+    echo -e "${YELLOW}Warning: Could not clone branding repo. Skipping branding step.${NC}"
+    echo -e "${YELLOW}Branding can be applied manually later.${NC}"
+}
+
+if [ -d "$BRANDING_DIR/branding" ]; then
+    echo "Applying branding configuration..."
+    
+    # Backup original kibana.yml
+    if [ -f "$ELK_DIR/kibana/config/kibana.yml" ]; then
+        cp "$ELK_DIR/kibana/config/kibana.yml" "$ELK_DIR/kibana/config/kibana.yml.backup"
+    fi
+    
+    # Append branding configuration to kibana.yml
+    if [ -f "$BRANDING_DIR/branding/kibana-branding.yml" ]; then
+        echo "" >> "$ELK_DIR/kibana/config/kibana.yml"
+        echo "# ===== Simplicity IT Custom Branding =====" >> "$ELK_DIR/kibana/config/kibana.yml"
+        cat "$BRANDING_DIR/branding/kibana-branding.yml" >> "$ELK_DIR/kibana/config/kibana.yml"
+        echo -e "${GREEN}✓ Kibana branding configuration applied${NC}"
+    fi
+    
+    # Copy dashboard templates
+    if [ -d "$BRANDING_DIR/dashboards" ]; then
+        mkdir -p "$ELK_DIR/dashboards"
+        cp -r "$BRANDING_DIR/dashboards/"* "$ELK_DIR/dashboards/" 2>/dev/null || true
+        echo -e "${GREEN}✓ Dashboard templates copied${NC}"
+    fi
+    
+    # Copy branding files for reference
+    if [ -d "$BRANDING_DIR/branding" ]; then
+        mkdir -p "$ELK_DIR/branding"
+        cp -r "$BRANDING_DIR/branding/"* "$ELK_DIR/branding/" 2>/dev/null || true
+        echo -e "${GREEN}✓ Branding reference files copied${NC}"
+    fi
+    
+    # Restart Kibana to apply branding
+    echo "Restarting Kibana to apply branding..."
+    docker compose restart kibana
+    
+    echo -e "${GREEN}✓ Simplicity IT branding applied successfully!${NC}"
+    
+    # Clean up
+    rm -rf "$BRANDING_DIR"
+else
+    echo -e "${YELLOW}⚠ Branding files not found. Continuing without branding.${NC}"
+fi
+
 echo ""
 echo -e "${GREEN}╔═══════════════════════════════════════════════╗${NC}"
 echo -e "${GREEN}║          Deployment Complete! 🎉              ║${NC}"
 echo -e "${GREEN}╚═══════════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "${BLUE}Access Information:${NC}"
+echo -e "${CYAN}Access Information:${NC}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 VM_IP=$(hostname -I | awk '{print $1}')
 echo -e "Kibana:        ${GREEN}http://${VM_IP}:5601${NC}"
 echo -e "Elasticsearch: ${GREEN}http://${VM_IP}:9200${NC}"
 echo ""
-echo -e "${BLUE}Default Credentials:${NC}"
+echo -e "${CYAN}Default Credentials:${NC}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "Username: elastic"
 echo "Password: changeme"
@@ -232,7 +293,24 @@ echo ""
 echo "4. Restart services:"
 echo "   docker compose up -d logstash kibana"
 echo ""
-echo -e "${BLUE}Useful Commands:${NC}"
+echo -e "${CYAN}Import Dashboards:${NC}"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "1. Open Kibana: http://${VM_IP}:5601"
+echo "2. Navigate to: Management → Stack Management → Saved Objects"
+echo "3. Click 'Import'"
+echo "4. Select dashboard files from: $ELK_DIR/dashboards/"
+echo ""
+echo "Dashboard templates available:"
+echo "  • Security Operations Dashboard"
+echo "  • System Health Dashboard"
+echo ""
+echo -e "${CYAN}Branding Files:${NC}"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "• Header template: $ELK_DIR/branding/dashboard-header.md"
+echo "• Footer template: $ELK_DIR/branding/dashboard-footer.md"
+echo "• Color palette: $ELK_DIR/branding/simplicity-it-colors.json"
+echo ""
+echo -e "${CYAN}Useful Commands:${NC}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "cd $ELK_DIR"
 echo "docker compose ps              # Check status"
@@ -240,16 +318,23 @@ echo "docker compose logs -f         # View logs"
 echo "docker compose down            # Stop"
 echo "docker compose up -d           # Start"
 echo ""
-echo -e "${BLUE}License Information:${NC}"
+echo -e "${CYAN}License Information:${NC}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "• Trial license active for 30 days"
 echo "• Full Platinum/Enterprise features enabled"
 echo "• Automatically converts to Basic (free) after trial"
 echo "• Check license: curl -u elastic:changeme http://localhost:9200/_license?pretty"
 echo ""
-echo -e "${BLUE}Documentation:${NC}"
+echo -e "${CYAN}Documentation:${NC}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "• README: https://github.com/deviantony/docker-elk"
-echo "• Local: $ELK_DIR/README.md"
+echo "• Official docker-elk: https://github.com/deviantony/docker-elk"
+echo "• Simplicity IT branding: https://github.com/Trusted360/ELK"
+echo "• Local README: $ELK_DIR/README.md"
 echo ""
-echo -e "${GREEN}Happy logging! 📊${NC}"
+echo -e "${CYAN}Support:${NC}"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "• Phone: (856) 236-2301"
+echo "• Email: help@simplicity-it.com"
+echo "• Website: https://simplicity-it.com/"
+echo ""
+echo -e "${GREEN}Easy to use. Easy to manage. Easy to trust. �${NC}"

@@ -1,0 +1,37 @@
+# Simplicity IT - Security Dashboard
+# This is a placeholder template. After creating your dashboard in Kibana:
+# 1. Go to Management → Stack Management → Saved Objects
+# 2. Select your dashboard
+# 3. Click Export
+# 4. Replace this file with the exported .ndjson content
+
+# Quick Import Instructions:
+# 1. Open Kibana: http://localhost:5601
+# 2. Go to Management → Stack Management → Saved Objects
+# 3. Click Import
+# 4. Select this file
+# 5. Resolve any conflicts (usually index patterns)
+
+# Example structure (will be replaced with actual export):
+{
+  "attributes": {
+    "title": "Simplicity IT - Security Operations Dashboard",
+    "description": "Branded security monitoring dashboard for Simplicity IT clients",
+    "panelsJSON": "[]",
+    "optionsJSON": "{}",
+    "version": 1,
+    "timeRestore": true,
+    "timeTo": "now",
+    "timeFrom": "now-24h",
+    "refreshInterval": {
+      "pause": false,
+      "value": 30000
+    },
+    "kibanaSavedObjectMeta": {
+      "searchSourceJSON": "{}"
+    }
+  },
+  "type": "dashboard",
+  "id": "simplicity-it-security-dashboard",
+  "references": []
+}
